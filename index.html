@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aiden | The Motivation Archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #050505;
+            --black-light: #0a0a0a;
+            --black-card: #111111;
+            --gold: #D4AF37;
+            --gold-light: #F4D03F;
+            --gold-dim: #8B7355;
+            --white: #f0f0f0;
+            --gray: #888888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--black);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dim);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        /* Cursor Glow */
+        .cursor-glow {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: all 0.1s ease;
+        }
+
+        /* Loading Screen */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--black);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-text {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 8px;
+            animation: loaderPulse 2s infinite;
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 2px;
+            background: var(--black-card);
+            margin-top: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            height: 100%;
+            width: 0%;
+            background: var(--gold);
+            animation: loadProgress 2s ease forwards;
+        }
+
+        @keyframes loaderPulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 20px rgba(212,175,55,0.5); }
+            50% { opacity: 0.7; text-shadow: 0 0 40px rgba(212,175,55,0.8); }
+        }
+
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5,5,5,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(212,175,55,0.1);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 5%;
+            background: rgba(5,5,5,0.95);
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--gold);
+            text-decoration: none;
+            letter-spacing: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.4s ease;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 0 2rem;
+            overflow: hidden;
+        }
+
+        .hero-bg-text {
+            position: absolute;
+            font-family: 'Cinzel', serif;
+            font-size: 20vw;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(212,175,55,0.05);
+            z-index: 0;
+            user-select: none;
+            animation: bgTextFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgTextFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(1deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-label {
+            font-size: 0.85rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.8s;
+        }
+
+        .hero-title .name {
+            display: block;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1.1s;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.2rem 2.5rem;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1.4s;
+        }
+
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            transition: left 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: -1;
+        }
+
+        .hero-btn:hover {
+            color: var(--black);
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(212,175,55,0.2);
+        }
+
+        .hero-btn:hover::before {
+            left: 0;
+        }
+
+        .hero-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .hero-btn:hover svg {
+            transform: translateX(5px);
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10vh) scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section styling */
+        section {
+            position: relative;
+            padding: 8rem 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .section-line {
+            width: 60px;
+            height: 2px;
+            background: var(--gold);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-line::before,
+        .section-line::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        .section-line::before { left: -4px; }
+        .section-line::after { right: -4px; }
+
+        /* Quote Section */
+        .quote-section {
+            background: var(--black-light);
+            overflow: hidden;
+        }
+
+        .quote-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .quote-card {
+            background: var(--black-card);
+            border: 1px solid rgba(212,175,55,0.15);
+            border-radius: 4px;
+            padding: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .quote-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            transform: scaleX(0);
+            transition: transform 0.6s ease;
+        }
+
+        .quote-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .quote-card:hover {
+            border-color: rgba(212,175,55,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .quote-icon {
+            font-size: 4rem;
+            color: var(--gold);
+            opacity: 0.3;
+            margin-bottom: 1rem;
+            font-family: 'Cinzel', serif;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.3rem, 3vw, 2rem);
+            line-height: 1.6;
+            color: var(--white);
+            margin-bottom: 2rem;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s ease;
+        }
+
+        .quote-author {
+            font-size: 0.9rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: opacity 0.4s ease;
+        }
+
+        .quote-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .quote-btn {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .quote-btn:hover {
+            color: var(--black);
+        }
+
+        .quote-btn:hover::before {
+            left: 0;
+        }
+
+        /* Pillars Grid */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pillar-card {
+            background: var(--black-card);
+            border: 1px solid rgba(212,175,55,0.1);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            cursor: pointer;
+        }
+
+        .pillar-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(to top, rgba(212,175,55,0.1), transparent);
+            transition: height 0.5s ease;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(212,175,55,0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .pillar-card:hover::after {
+            height: 100%;
+        }
+
+        .pillar-number {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--gold);
+            opacity: 0.2;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            transition: all 0.4s ease;
+        }
+
+        .pillar-card:hover .pillar-number {
+            opacity: 0.4;
+            transform: scale(1.2);
+        }
+
+        .pillar-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            transition: transform 0.4s ease;
+        }
+
+        .pillar-card:hover .pillar-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .pillar-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pillar-desc {
+            color: var(--gray);
+            line-height: 1.8;
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Stats Counter Section */
+        .stats-section {
+            background: var(--black-light);
+            padding: 5rem 5%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item {
+            position: relative;
+        }
+
+        .stat-number {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Daily Fuel Section */
+        .fuel-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .fuel-card {
+            background: var(--black-card);
+            border: 1px solid rgba(212,175,55,0.15);
+            border-radius: 4px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .fuel-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .fuel-question {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .fuel-input-group {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        .fuel-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: var(--black);
+            border: 1px solid rgba(212,175,55,0.2);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .fuel-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212,175,55,0.1);
+        }
+
+        .fuel-input::placeholder {
+            color: var(--gray);
+        }
+
+        .fuel-submit {
+            padding: 1rem 2rem;
+            background: var(--gold);
+            border: none;
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .fuel-submit:hover {
+            background: var(--gold-light);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.3);
+        }
+
+        .fuel-message {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .fuel-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--black-light);
+            border-top: 1px solid rgba(212,175,55,0.1);
+            padding: 4rem 5% 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            letter-spacing: 4px;
+        }
+
+        .footer-tagline {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .footer-line {
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+            margin: 0 auto 2rem;
+        }
+
+        .footer-copy {
+            color: var(--gray);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-copy span {
+            color: var(--gold);
+        }
+
+        /* Scroll Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+        .reveal-delay-6 { transition-delay: 0.6s; }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: var(--black);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 3rem;
+                transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+                border-left: 1px solid rgba(212,175,55,0.1);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .hero-bg-text {
+                font-size: 30vw;
+            }
+
+            .quote-card {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .fuel-input-group {
+                flex-direction: column;
+            }
+
+            section {
+                padding: 5rem 5%;
+            }
+        }
+
+        /* Glitch effect for name on hover */
+        .glitch-hover:hover {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cursor Glow -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">AIDEN</div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#" class="logo">AIDEN</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#wisdom">Wisdom</a></li>
+            <li><a href="#pillars">Pillars</a></li>
+            <li><a href="#fuel">Fuel</a></li>
+        </ul>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg-text">AIDEN</div>
+        <div class="particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-label">Welcome to Your Domain</div>
+            <h1 class="hero-title">
+                <span class="name glitch-hover">AIDEN</span>
+                <span style="display: block; font-size: 0.5em; color: var(--white); margin-top: 0.5rem;">The Motivation Archive</span>
+            </h1>
+            <p class="hero-subtitle">
+                Your personal sanctuary of power, discipline, and relentless ambition. 
+                Built for those who refuse to settle for average.
+            </p>
+            <a href="#wisdom" class="hero-btn">
+                Enter the Archive
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section" id="wisdom">
+        <div class="section-header reveal">
+            <span class="section-label">Daily Wisdom</span>
+            <h2 class="section-title">Words That Move Mountains</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="quote-container reveal">
+            <div class="quote-card">
+                <div class="quote-icon">"</div>
+                <p class="quote-text" id="quoteText">The only way to do great work is to love what you do.</p>
+                <p class="quote-author" id="quoteAuthor">— Steve Jobs</p>
+            </div>
+            <div class="quote-controls">
+                <button class="quote-btn" onclick="newQuote()">New Wisdom</button>
+                <button class="quote-btn" onclick="copyQuote()">Copy</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pillars Section -->
+    <section class="pillars-section" id="pillars">
+        <div class="section-header reveal">
+            <span class="section-label">The Foundation</span>
+            <h2 class="section-title">Six Pillars of Power</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="pillars-grid">
+            <div class="pillar-card reveal reveal-delay-1">
+                <span class="pillar-number">01</span>
+                <div class="pillar-icon">⚡</div>
+                <h3 class="pillar-title">Relentless Action</h3>
+                <p class="pillar-desc">Motivation is fleeting. Discipline is permanent. Take action before you feel ready.</p>
+            </div>
+            <div class="pillar-card reveal reveal-delay-2">
+                <span class="pillar-number">02</span>
+                <div class="pillar-icon">🎯</div>
+                <h3 class="pillar-title">Laser Focus</h3>
+                <p class="pillar-desc">Eliminate distractions. What you focus on expands. Protect your attention like gold.</p>
+            </div>
+            <div class="pillar-card reveal reveal-delay-3">
+                <span class="pillar-number">03</span>
+                <div class="pillar-icon">🔥</div>
+                <h3 class="pillar-title">Unbreakable Will</h3>
+                <p class="pillar-desc">When you want to quit, that's when growth happens. Push through the resistance.</p>
+            </div>
+            <div class="pillar-card reveal reveal-delay-4">
+                <span class="pillar-number">04</span>
+                <div class="pillar-icon">🧠</div>
+                <h3 class="pillar-title">Growth Mindset</h3>
+                <p class="pillar-desc">Every failure is data. Every setback is a lesson. You are not your circumstances.</p>
+            </div>
+            <div class="pillar-card reveal reveal-delay-5">
+                <span class="pillar-number">05</span>
+                <div class="pillar-icon">⏳</div>
+                <h3 class="pillar-title">Patient Hustle</h3>
+                <p class="pillar-desc">Rome wasn't built in a day, but they were laying bricks every hour. Consistency wins.</p>
+            </div>
+            <div class="pillar-card reveal reveal-delay-6">
+                <span class="pillar-number">06</span>
+                <div class="pillar-icon">👑</div>
+                <h3 class="pillar-title">Self Belief</h3>
+                <p class="pillar-desc">If you don't believe in yourself, why should anyone else? You are capable of greatness.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="365">0</div>
+                <div class="stat-label">Days of Power</div>
+            </div>
+            <div class="stat-item reveal reveal-delay-2">
+                <div class="stat-number" data-target="100">0</div>
+                <div class="stat-label">Percent Commitment</div>
+            </div>
+            <div class="stat-item reveal reveal-delay-3">
+                <div class="stat-number" data-target="0">0</div>
+                <div class="stat-label">Excuses Allowed</div>
+            </div>
+            <div class="stat-item reveal reveal-delay-4">
+                <div class="stat-number" data-target="1">0</div>
+                <div class="stat-label">Life to Build</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fuel Section -->
+    <section class="fuel-section" id="fuel">
+        <div class="section-header reveal">
+            <span class="section-label">Daily Fuel</span>
+            <h2 class="section-title">Ignite Your Fire</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="fuel-card reveal">
+            <p class="fuel-question">What are you conquering today, Aiden?</p>
+            <div class="fuel-input-group">
+                <input type="text" class="fuel-input" id="fuelInput" placeholder="Type your mission..." maxlength="60">
+                <button class="fuel-submit" onclick="ignite()">Ignite</button>
+            </div>
+            <div class="fuel-message" id="fuelMessage"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">AIDEN</div>
+        <p class="footer-tagline">Built for Greatness. Designed for Discipline.</p>
+        <div class="footer-line"></div>
+        <p class="footer-copy">© 2026 <span>AIDEN</span>. All rights reserved. Keep pushing forward.</p>
+    </footer>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 2200);
+        });
+
+        // Cursor Glow
+        const cursorGlow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', (e) => {
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
+        });
+
+        // Mobile Menu
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Generate Particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 60; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.width = (Math.random() * 3 + 1) + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+        }
+
+        // Quotes
+        const quotes = [
+            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+            { text: "Discipline will take you where motivation won't.", author: "Unknown" },
+            { text: "Your future is created by what you do today, not tomorrow.", author: "Robert Kiyosaki" },
+            { text: "Pain is temporary. Quitting lasts forever.", author: "Lance Armstrong" },
+            { text: "Don't watch the clock. Do what it does. Keep going.", author: "Sam Levenson" },
+            { text: "Success is the sum of small efforts, repeated day in and day out.", author: "Robert Collier" },
+            { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
+            { text: "Dream big. Start small. Act now.", author: "Robin Sharma" },
+            { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+            { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+            { text: "Be stronger than your strongest excuse.", author: "Unknown" },
+            { text: "The man who moves a mountain begins by carrying away small stones.", author: "Confucius" },
+            { text: "Wake up with determination. Go to bed with satisfaction.", author: "Unknown" },
+            { text: "Your only limit is your mind.", author: "Unknown" },
+            { text: "Act as if what you do makes a difference. It does.", author: "William James" }
+        ];
+
+        let currentQuote = 0;
+
+        function newQuote() {
+            const textEl = document.getElementById('quoteText');
+            const authorEl = document.getElementById('quoteAuthor');
+            
+            textEl.style.opacity = '0';
+            authorEl.style.opacity = '0';
+            
+            setTimeout(() => {
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * quotes.length);
+                } while (newIndex === currentQuote && quotes.length > 1);
+                
+                currentQuote = newIndex;
+                textEl.textContent = quotes[newIndex].text;
+                authorEl.textContent = '— ' + quotes[newIndex].author;
+                
+                textEl.style.opacity = '1';
+                authorEl.style.opacity = '1';
+            }, 400);
+        }
+
+        function copyQuote() {
+            const text = document.getElementById('quoteText').textContent;
+            const author = document.getElementById('quoteAuthor').textContent;
+            navigator.clipboard.writeText(`"${text}" ${author}`);
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = originalText, 1500);
+        }
+
+        // Fuel Section
+        const fuelMessages = [
+            "Let's get it, Aiden. No mercy.",
+            "The grind doesn't stop. Neither do you.",
+            "Make today count. Future you is watching.",
+            "Dominate the day, Aiden.",
+            "One step closer to greatness.",
+            "Unstoppable energy activated.",
+            "Your potential is limitless. Prove it."
+        ];
+
+        function ignite() {
+            const input = document.getElementById('fuelInput');
+            const message = document.getElementById('fuelMessage');
+            const value = input.value.trim();
+            
+            if (value) {
+                const randomMsg = fuelMessages[Math.floor(Math.random() * fuelMessages.length)];
+                message.textContent = `"${value}" — ${randomMsg}`;
+                message.classList.add('show');
+                input.value = '';
+            } else {
+                message.textContent = "Type your mission first, warrior.";
+                message.classList.add('show');
+            }
+        }
+
+        document.getElementById('fuelInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') ignite();
+        });
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Counter Animation
+        const statNumbers = document.querySelectorAll('.stat-number');
+        let countersAnimated = false;
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !countersAnimated) {
+                    countersAnimated = true;
+                    statNumbers.forEach(stat => {
+                        const target = parseInt(stat.getAttribute('data-target'));
+                        const duration = 2000;
+                        const increment = target / (duration / 16);
+                        let current = 0;
+                        
+                        const updateCounter = () => {
+                            current += increment;
+                            if (current < target) {
+                                stat.textContent = Math.floor(current);
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                stat.textContent = target;
+                            }
+                        };
+                        
+                        updateCounter();
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelector('.stats-section') && counterObserver.observe(document.querySelector('.stats-section'));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
